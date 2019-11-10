@@ -12,10 +12,10 @@ import operator
 import time
 
 Help = """
-Dmenu Extended command line options
+Bemenu Extended command line options
 
 Usage:
-    dmenu_extended_run [OPTION] ["INPUT"]
+    bemenu_extended_run [OPTION] ["INPUT"]
 
 Options:
     --debug             enable debug mode
@@ -54,23 +54,23 @@ _version_ = 19.0318
 # Find out the system's favouite encoding
 system_encoding = locale.getpreferredencoding()
 
-path_base = os.path.expanduser('~') + '/.config/dmenu-extended'
-path_cache = os.getenv('XDG_CACHE_HOME', os.path.join(os.path.expanduser('~'), '.cache')) + '/dmenu-extended'
+path_base = os.path.expanduser('~') + '/.config/bemenu-extended'
+path_cache = os.getenv('XDG_CACHE_HOME', os.path.join(os.path.expanduser('~'), '.cache')) + '/bemenu-extended'
 path_prefs = path_base + '/config'
 path_plugins = path_base + '/plugins'
 
-file_prefs = path_prefs + '/dmenuExtended_preferences.txt'
-file_cache = path_cache + '/dmenuExtended_all.txt'
-file_cache_binaries = path_cache + '/dmenuExtended_binaries.txt'
-file_cache_files = path_cache + '/dmenuExtended_files.txt'
-file_cache_folders = path_cache + '/dmenuExtended_folders.txt'
-file_cache_aliases = path_cache + '/dmenuExtended_aliases.txt'
-file_cache_aliasesLookup = path_cache + '/dmenuExtended_aliases_lookup.json'
-file_cache_plugins = path_cache + '/dmenuExtended_plugins.txt'
-file_cache_frequentlyUsed_frequency = path_cache + '/dmenuExtended_frequentlyUsed_frequency.json'
-file_cache_frequentlyUsed_ordered = path_cache + '/dmenuExtended_frequentlyUsed_ordered.json'
+file_prefs = path_prefs + '/bemenuExtended_preferences.txt'
+file_cache = path_cache + '/bemenuExtended_all.txt'
+file_cache_binaries = path_cache + '/bemenuExtended_binaries.txt'
+file_cache_files = path_cache + '/bemenuExtended_files.txt'
+file_cache_folders = path_cache + '/bemenuExtended_folders.txt'
+file_cache_aliases = path_cache + '/bemenuExtended_aliases.txt'
+file_cache_aliasesLookup = path_cache + '/bemenuExtended_aliases_lookup.json'
+file_cache_plugins = path_cache + '/bemenuExtended_plugins.txt'
+file_cache_frequentlyUsed_frequency = path_cache + '/bemenuExtended_frequentlyUsed_frequency.json'
+file_cache_frequentlyUsed_ordered = path_cache + '/bemenuExtended_frequentlyUsed_ordered.json'
 
-d = None # Global dmenu object - initialised near bottom of script
+d = None # Global bemenu object - initialised near bottom of script
 
 default_prefs = {
     "valid_extensions": [
@@ -121,22 +121,21 @@ default_prefs = {
     "path_aliasFile": "",               # Pointer to an aliases file (if any)
     "frequently_used": 0,               # Number of most frequently used commands to show in the menu
     "alias_display_format": "{name}",
-    "path_shellCommand": "~/.dmenuEextended_shellCommand.sh",
-    "menu": 'dmenu',                    # Executable for the menu
+    "path_shellCommand": "~/.bemenuEextended_shellCommand.sh",
+    "menu": 'bemenu',                    # Executable for the menu
     "menu_arguments": [
-        "-b",                           # Place at bottom of screen
         "-i",                           # Case insensitive searching
-        "-nf",                          # Element foreground colour
+        "--nf",                          # Element foreground colour
         "#888888",
-        "-nb",                          # Element background colour
+        "--nb",                          # Element background colour
         "#1D1F21",
-        "-sf",                          # Selected element foreground colour
+        "--sf",                          # Selected element foreground colour
         "#ffffff",
-        "-sb",                          # Selected element background colour
+        "--sb",                          # Selected element background colour
         "#1D1F21",
-        "-fn",                          # Font and size
+        "--fn",                          # Font and size
         "terminus",
-        "-l",                           # Number of lines to display
+        "--l",                           # Number of lines to display
         "20"
     ],
     "password_helper": [
@@ -163,7 +162,7 @@ def setup_user_files():
     directory.
     """
 
-    print('Setting up dmenu-extended prefs files...')
+    print('Setting up bemenu-extended prefs files...')
 
     try:
         os.makedirs(path_plugins)
@@ -232,7 +231,7 @@ def load_plugins(debug=False):
     plugins_loaded = [{"filename": "plugin_settings.py",
                        "plugin": extension()}]
 
-    # Pass the plug-in's version of dmenu the list of launch arguments
+    # Pass the plug-in's version of bemenu the list of launch arguments
     plugins_loaded[0]['plugin'].launch_args = d.launch_args
     if debug:
         plugins_loaded[0]['plugin'].debug = True
@@ -242,7 +241,7 @@ def load_plugins(debug=False):
             try:
                 __import__('plugins.' + plugin)
                 exec('plugins_loaded.append({"filename": "' + plugin + '.py", "plugin": plugins.' + plugin + '.extension()})')
-                # Pass the plug-in's version of dmenu the list of launch arguments
+                # Pass the plug-in's version of bemenu the list of launch arguments
                 plugins_loaded[-1]['plugin'].launch_args = d.launch_args
                 if debug:
                     plugins_loaded[-1]['plugin'].debug = True
@@ -300,7 +299,7 @@ def frequent_commands_retrieve(number):
             return "".join(f.readlines()[:number])
 
 
-class dmenu(object):
+class bemenu(object):
 
     plugins_loaded = False
     prefs = False
@@ -672,7 +671,7 @@ class dmenu(object):
 
     def execute(self, command, fork=None):
         """
-        Execute a command on behalf of dmenu. Will fork into background
+        Execute a command on behalf of bemenu. Will fork into background
         by default unless fork=False. Will prepend the value of
         self.preCommand to the given command, necessary for sudo calls.
         """
@@ -1172,7 +1171,7 @@ class dmenu(object):
         return out
 
 
-class extension(dmenu):
+class extension(bemenu):
 
     title = 'Settings'
     is_submenu = True
@@ -1181,9 +1180,9 @@ class extension(dmenu):
         self.load_preferences()
 
     plugins_index_urls = [
-        'https://raw.githubusercontent.com/markhedleyjones/dmenu-extended-plugins/master/plugins_index.json',
-        'https://raw.githubusercontent.com/v1nc/dmenu-extended-plugins/master/plugins_index.json',
-        'https://raw.githubusercontent.com/mg979/dmenu-extended-plugins/master/plugins_index.json'
+        'https://raw.githubusercontent.com/markhedleyjones/bemenu-extended-plugins/master/plugins_index.json',
+        'https://raw.githubusercontent.com/v1nc/bemenu-extended-plugins/master/plugins_index.json',
+        'https://raw.githubusercontent.com/mg979/bemenu-extended-plugins/master/plugins_index.json'
     ]
 
     def rebuild_cache(self):
@@ -1264,7 +1263,7 @@ class extension(dmenu):
                         items.append(plugin.replace(substitute[0], substitute[1]) + ' - ' + plugins[plugin]['desc'])
                         accept.append(True)
                     else:
-                        items.append(plugin.replace(substitute[0], substitute[1]) + ' - Requires dmenu_extended >= v' + str(plugins[plugin]["min_version"]))
+                        items.append(plugin.replace(substitute[0], substitute[1]) + ' - Requires bemenu_extended >= v' + str(plugins[plugin]["min_version"]))
                         accept.append(False)
         if len(items) == 0:
             self.menu(['There are no new plugins to install'])
@@ -1335,7 +1334,7 @@ class extension(dmenu):
                             for plugin in self.plugins_available():
                                 print(plugin)
             else:
-                self.menu(['The selected plugin cannot be installed as it requires a newer version of dmenu-extended'])
+                self.menu(['The selected plugin cannot be installed as it requires a newer version of bemenu-extended'])
 
     def installed_plugins(self):
         plugins = []
@@ -1422,12 +1421,12 @@ class extension(dmenu):
         subprocess.call(['systemctl', '--user', 'daemon-reload'])
         try:
             has_service = subprocess.check_output(['systemctl', '--user', 'list-unit-files', \
-                                                  'update-dmenu-extended-db.timer'])
+                                                  'update-bemenu-extended-db.timer'])
         except subprocess.CalledProcessError:
             return 0
-        if 'update-dmenu-extended-db.timer' not in str(has_service):
+        if 'update-bemenu-extended-db.timer' not in str(has_service):
             return 0
-        is_enabled = subprocess.call(['systemctl', '--user', 'is-enabled', 'update-dmenu-extended-db.timer'])
+        is_enabled = subprocess.call(['systemctl', '--user', 'is-enabled', 'update-bemenu-extended-db.timer'])
         if is_enabled == 0:
             return 1
         else:
@@ -1436,14 +1435,14 @@ class extension(dmenu):
 
     # These two methods presume that we have systemd and the scripts are installed.
     def enable_automatic_rebuild_cache(self):
-        subprocess.call(['systemctl', '--user', 'enable', 'update-dmenu-extended-db.timer'])
-        subprocess.call(['systemctl', '--user', 'start', 'update-dmenu-extended-db.timer'])
+        subprocess.call(['systemctl', '--user', 'enable', 'update-bemenu-extended-db.timer'])
+        subprocess.call(['systemctl', '--user', 'start', 'update-bemenu-extended-db.timer'])
         self.menu(['Successfully enabled systemd service.'])
 
 
     def disable_automatic_rebuild_cache(self):
-        subprocess.call(['systemctl', '--user', 'stop', 'update-dmenu-extended-db.timer'])
-        subprocess.call(['systemctl', '--user', 'disable', 'update-dmenu-extended-db.timer'])
+        subprocess.call(['systemctl', '--user', 'stop', 'update-bemenu-extended-db.timer'])
+        subprocess.call(['systemctl', '--user', 'disable', 'update-bemenu-extended-db.timer'])
         self.menu(['Successfully disabled systemd service.'])
 
     def edit_preferences(self):
@@ -1984,7 +1983,7 @@ def run(*args):
             else:
                 handle_command(d, out)
 
-d = dmenu()
+d = bemenu()
 
 if __name__ == "__main__":
     run(*sys.argv)

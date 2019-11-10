@@ -7,12 +7,12 @@ import sys
 from os import path
 
 sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-import dmenu_extended as d
+import bemenu_extended as d
 
-menu = d.dmenu()
+menu = d.bemenu()
 
 def test_required_variables_available():
-    assert d.path_cache[-len('dmenu-extended'):] == 'dmenu-extended'
+    assert d.path_cache[-len('bemenu-extended'):] == 'bemenu-extended'
 
 def test_command_to_list():
     assert menu.command_to_list(['a', 'b', 'c']) == [u'a', u'b', u'c']
